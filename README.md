@@ -1,4 +1,4 @@
-sloc is a command-line program for quickly counting lines of code recursively within the current directory.
+sloc (acronym for "significant lines of code") is a command-line program for quickly counting lines of code recursively within the current directory.
 Simplicity was a major design goal, and as a result, the implementation is under 250 lines of Go utilizing only the 
 standard library. Performance was a secondary goal, and parallelism is employed.
 
@@ -99,6 +99,14 @@ Limitations
 ---
 Multi-line (block) comments are not currently supported. This is largely due to the focus on simplicity and speed.
 
+What is a Significant Line of Code?
+---
+A significant line of code is one which does not match one or more rules that deem a line insignificant. Here are some 
+examples of a line that is not considered significant:
+* Whitespace only (indentation/invisible characters only, a line with no characters at all)
+* Consists only of language-specific delimiters (possibly in addition to whitespace) - `{`, `}`, `)`, `(`, `end`, etc.
+* Comments (excl. block comments, see previous section)
+* Any files under a directory that is commonly reserved for vendored code (dependencies)
 
 Adding A Language
 ---
