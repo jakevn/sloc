@@ -103,12 +103,12 @@ What is a Significant Line of Code?
 ---
 A significant line of code is one which does not match one or more rules that deem a line insignificant. Here are some 
 examples of a line that is not considered significant:
-* Whitespace only (indentation/invisible characters only, a line with no characters at all)
-* Consists only of language-specific delimiters (possibly in addition to whitespace) - `{`, `}`, `)`, `(`, `end`, etc.
+* Whitespace (indentation/invisible characters only, a line with no characters at all)
+* Language-specific delimiters (possibly in addition to whitespace) - `{`, `}`, `)`, `(`, `end`, etc.
 * Comments (excl. block comments, see previous section)
-* Any files under a directory that is commonly reserved for vendored code (dependencies)
+* Files under a directory that is commonly reserved for vendored code (dependencies)
 
-Adding A Language
+Adding a Language
 ---
 It is simple to add support for a language. Near the top of `main.go`, you will find a map of language definitions.
 
