@@ -312,7 +312,9 @@ func isComment(l lang, line string) bool {
 	}
 
 	for _, commentStart := range l.Comment {
-		strings.HasPrefix(fields[0], commentStart)
+		if strings.HasPrefix(fields[0], commentStart) {
+			return true
+		}
 	}
 	return false
 }
