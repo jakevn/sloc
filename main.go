@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -30,6 +29,8 @@ type count struct {
 	CharCount int
 	FileCount int
 }
+
+const maxFd = 10
 
 var commonIgnore = []string{"}", "{", ")", "},", "),", "[", "]", "],"}
 
@@ -118,11 +119,7 @@ var languages = map[string]lang{
 	},
 }
 
-const maxFd = 10
-
 var (
-	noTest      = false
-	onlyLang    = ""
 	fdSem       = make(chan struct{}, maxFd)
 	dirWg       = &sync.WaitGroup{}
 	countWg     = &sync.WaitGroup{}
@@ -131,14 +128,6 @@ var (
 )
 
 func main() {
-	flag.BoolVar(&noTest, "notest", false, "ignore test files/directories")
-	flag.StringVar(&onlyLang, "lang", "", "only count source for this language")
-	flag.Parse()
-
-	if onlyLang != "" {
-		removeOtherLangs(onlyLang)
-	}
-
 	for langName := range languages {
 		counters[langName] = count{}
 	}
@@ -192,16 +181,6 @@ func commaInt(num int) string {
 		res += string(c)
 	}
 	return res
-}
-
-func removeOtherLangs(keepLang string) {
-	keepLang = strings.ToLower(keepLang)
-
-	for langName := range languages {
-		if strings.ToLower(langName) != keepLang {
-			delete(languages, langName)
-		}
-	}
 }
 
 func countDir(dirPath string) {
@@ -273,14 +252,6 @@ func ignoreDir(dirPath, langName string) bool {
 			return true
 		}
 	}
-
-	if noTest {
-		for _, ignoreFile := range languages[langName].TestDirname {
-			if strings.Contains(dirPath, ignoreFile) {
-				return true
-			}
-		}
-	}
 	return false
 }
 
@@ -299,14 +270,6 @@ func ignoreFile(fileName, langName string) bool {
 	for _, ignoreFile := range languages[langName].FilenameIgnore {
 		if strings.Contains(fileName, ignoreFile) {
 			return true
-		}
-	}
-
-	if noTest {
-		for _, ignoreFile := range languages[langName].TestFilename {
-			if strings.Contains(fileName, ignoreFile) {
-				return true
-			}
 		}
 	}
 	return false
